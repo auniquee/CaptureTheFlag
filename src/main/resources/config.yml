@@ -1,0 +1,96 @@
+default-colors:
+  names:
+    - blue
+    - red
+    - yellow
+    - green
+  codes:
+    - 345FFF
+    - FF3434
+    - FFE934
+    - 4DFF34
+maps:
+  sektor-12:
+    teams:
+      blå:
+        spawn-point:
+          - 17.5
+          - -57.0
+          - -20.5
+          - 45.0
+          - 8.0
+        flag-position:
+          - 14.0
+          - -56.0
+          - -17.0
+          - 45.0
+          - 8.0
+        color-code: 345FDD
+        block-type: blue_wool
+        banner-type: blue_banner
+      röd:
+        spawn-point:
+          - 17.5
+          - -57.0
+          - 23.5
+          - 135.0
+          - 8.0
+        flag-position:
+          - 14.0
+          - -56.0
+          - 20.0
+          - 135.0
+          - 8.0
+        color-code: DD3434
+        block-type: red_wool
+        banner-type: red_banner
+      gul:
+        spawn-point:
+          - -26.5
+          - -57.0
+          - -20.5
+          - -45.0
+          - 8.0
+        flag-position:
+          - -23.0
+          - -56.0
+          - -17.0
+          - -45.0
+          - 8.0
+        color-code: EFE934
+        block-type: yellow_wool
+        banner-type: yellow_banner
+      grön:
+        spawn-point:
+          - -26.5
+          - -57.0
+          - 23.5
+          - -135.0
+          - 8.0
+        flag-position:
+        - -23.0
+        - -56.0
+        - 20.0
+        - -135.0
+        - 8.0
+        color-code: 4DBB34
+        block-type: green_wool
+        banner-type: green_banner
+    world: ctf_world
+    powerup-locations:
+      p1:
+        - -42.5
+        - -51.0
+        - 1.5
+      p2:
+        - -23.0
+        - -56.0
+        - 20.0
+      p3:
+        - -23.0
+        - -56.0
+        - 20.0
+      p4:
+        - -23.0
+        - -56.0
+        - 20.0

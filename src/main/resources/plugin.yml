@@ -1,0 +1,9 @@
+name: CaptureTheFlag
+version: '1.0'
+main: me.aunique.captureTheFlag.CaptureTheFlag
+api-version: '1.21'
+authors: [ aunique ]
+description: This plugin displays a display in minecraft
+commands:
+  ctf:
+    description: start ting
