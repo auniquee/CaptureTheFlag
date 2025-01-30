@@ -133,7 +133,7 @@ public class Game {
         for (ArrayList<Float> coords : config.getPowerups(map)) {
             Location loc = new Location(world, coords.get(0), coords.get(1), coords.get(2));
             powerups.add(new Powerup(loc.clone()));
-            powerups.getLast().spawn();
+            powerups.getLast().spawn(true, true, null);
         }
         /*
 
