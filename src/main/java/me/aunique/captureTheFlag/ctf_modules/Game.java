@@ -24,7 +24,7 @@ public class Game {
     private boolean isRunning = false;
     private final String map;
     private final List<FlagEntity> flags;
-    private ArrayList<Powerup> powerups;
+    private ArrayList<PowerUp> powerUps;
     private static Game instance;
 
     public Game(String map){
@@ -32,7 +32,7 @@ public class Game {
         players = new ArrayList<>();
         this.isRunning = false;
         this.map = map;
-        this.powerups  = new ArrayList<>();
+        this.powerUps = new ArrayList<>();
         this.flags = new ArrayList<>();
     }
     public static ConfigManager config = ConfigManager.getInstance();
@@ -132,8 +132,8 @@ public class Game {
         //POWERUPS
         for (ArrayList<Float> coords : config.getPowerups(map)) {
             Location loc = new Location(world, coords.get(0), coords.get(1), coords.get(2));
-            powerups.add(new Powerup(loc.clone()));
-            powerups.getLast().spawn(true, true, null);
+            powerUps.add(new PowerUp(loc.clone(), null, true, true, 20*30 )); // 30 ticks
+            powerUps.getLast().spawn();
         }
         /*
 
