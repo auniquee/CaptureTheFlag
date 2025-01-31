@@ -9,7 +9,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Transformation;
 import org.joml.Quaternionf;
@@ -32,8 +36,8 @@ public class PowerUp {
     private Boolean spawned;
     private PowerUpType powerUpType;
     private BukkitTask spawnTask;
-    private Boolean randomizePowerUp;
-    private int respawnInterval;
+    private final Boolean randomizePowerUp;
+    private final int respawnInterval;
 
     private ItemDisplay itemDisplay;
     private ArmorStand powerUpTitle, powerUpSubtitle;
@@ -100,6 +104,11 @@ public class PowerUp {
             }
             case TEAM_SWORD_UPGRADE -> {
                 itemDisplay.setItemStack(new ItemStack(Material.IRON_SWORD));
+                powerUpTitle.customName(
+                        Component.text()
+                                .append(Component.text("a"))
+                                .build()
+                );
             }
             case TEAM_FLAG_PROTECTION -> {
                 itemDisplay.setItemStack(new ItemStack(Material.BARRIER));
@@ -114,22 +123,51 @@ public class PowerUp {
         if(!spawned){
             return;
         }
-        switch (powerUpType) {
-            case TEAM_SPEED -> {
+        for (Player teamPlayer : takePlayer.getTeam().getPlayers().stream().map(CTFPlayer::getPlayer).toList()){
 
-            }
-            case TEAM_SWORD_UPGRADE -> {
 
-            }
-            case TEAM_FLAG_PROTECTION -> {
+            switch (powerUpType) {
+                case TEAM_SPEED -> {
+                    teamPlayer.addPotionEffect(
+                            new PotionEffect(PotionEffectType.SPEED, 30, 0, false, true)
+                    );
+                }
+                case TEAM_SWORD_UPGRADE -> {
+                    if(teamPlayer.getInventory().contains(Material.WOODEN_SWORD)){
+                        teamPlayer.getInventory().remove(Material.WOODEN_SWORD);
+                        teamPlayer.getInventory().addItem(new ItemStack(Material.IRON_SWORD));
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                teamPlayer.getInventory().remove(Material.IRON_SWORD);
+                                teamPlayer.getInventory().addItem(new ItemStack(Material.WOODEN_SWORD));
 
-            }
-            case TEAM_ARMOR_UPGRADE -> {
+                            }
+                        }.runTaskLaterAsynchronously(CaptureTheFlag.getInstance(), 20*30); // 30 sek
+                    }
+                }
+                case TEAM_FLAG_PROTECTION -> {
 
+                }
+                case TEAM_ARMOR_UPGRADE -> {
+                    if(teamPlayer.getInventory().contains(Material.LEATHER_CHESTPLATE)){
+                        teamPlayer.getInventory().remove(Material.LEATHER_CHESTPLATE);
+                        teamPlayer.getInventory().addItem(new ItemStack(Material.IRON_CHESTPLATE));
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                teamPlayer.getInventory().remove(Material.IRON_CHESTPLATE);
+                                teamPlayer.getInventory().addItem(new ItemStack(Material.LEATHER_CHESTPLATE));
+
+                            }
+                        }.runTaskLaterAsynchronously(CaptureTheFlag.getInstance(), 20*30); // 30 sek
+                    }
+                }
             }
         }
         this.spawned = false;
     }
+
 
     public void setRespawnSelf(boolean respawnSelf) {
         if (respawnSelf) {
@@ -144,7 +182,7 @@ public class PowerUp {
             return; // Prevent duplicate tasks
         }
 
-        spawnTask = Bukkit.getScheduler().runTaskTimer(CaptureTheFlag.getInstance(), this::spawn, respawnInterval, respawnInterval);
+        spawnTask = Bukkit.getScheduler().runTaskTimerAsynchronously(CaptureTheFlag.getInstance(), this::spawn, respawnInterval, respawnInterval);
     }
 
     private void stopSpawningPowerUps() {

@@ -25,7 +25,9 @@ public class FlagEntity {
     private ArmorStand armorStand;
     private ArmorStand subTitle;
     private BlockDisplay bannerDisplay;
-    String banner;
+    private final String banner;
+    private Boolean currentlyProtected;
+
 
     public FlagEntity(Location flagLocation, String banner){
         this.flagLocation = flagLocation.clone();
@@ -35,7 +37,13 @@ public class FlagEntity {
         this.bannerDisplay = null;
         this.subTitle = null;
         this.captured = false;
+        this.currentlyProtected = false;
     }
+
+    public Boolean getCurrentlyProtected() { return currentlyProtected; }
+
+    public void setCurrentlyProtected(boolean currentlyProtected) { this.currentlyProtected = currentlyProtected; }
+
     public void setTeam(Team team){
         this.team = team;
     }
@@ -72,7 +80,6 @@ public class FlagEntity {
         bannerDisplay = (BlockDisplay) flagLocation.getWorld().spawnEntity(flagLocation, EntityType.BLOCK_DISPLAY);
         bannerDisplay.setTransformation(transformation);
         try{
-            System.out.println(banner);
             bannerDisplay.setBlock(Bukkit.createBlockData(Objects.requireNonNull(Material.matchMaterial(banner))));
         }catch(NullPointerException e){
             bannerDisplay.setBlock(Bukkit.createBlockData(Material.WHITE_BANNER));

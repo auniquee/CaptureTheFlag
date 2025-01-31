@@ -68,7 +68,7 @@ public class CaptureFlagListener implements Listener {
             captureFlagEvent.getPlayer().sendMessage(Component.text("Du har redan tagit en flagga!", NamedTextColor.RED));
         }
         // Om spelaren klickar på en flagga för att ta den
-        else if (capturePlayer.getPlayer().getGameMode() != GameMode.SPECTATOR && !stolenTeam.getFlag().getCaptured()){ // not spectator so that you cant take the flag when died
+        else if (capturePlayer.getPlayer().getGameMode() != GameMode.SPECTATOR && !stolenTeam.getFlag().getCaptured() && !stolenTeam.getFlag().getCurrentlyProtected()){ // not spectator so that you cant take the flag when died
             stolenTeam.getFlag().takeFlag();
             ArrayList<CTFPlayer> players = Game.getInstance().getAllPlayers();
             for(CTFPlayer player : players){
@@ -115,7 +115,10 @@ public class CaptureFlagListener implements Listener {
             }
 
         // om lagets flagga redan är tagen
-        } else if(capturePlayer.getPlayer().getGameMode() != GameMode.SPECTATOR && stolenTeam.getFlag().getCaptured()){
+        }else if(stolenTeam.getFlag().getCurrentlyProtected()){
+            capturePlayer.getPlayer().sendMessage(Component.text("Denna flagga är skyddad just nu!", NamedTextColor.RED));
+        }
+        else if(capturePlayer.getPlayer().getGameMode() != GameMode.SPECTATOR && stolenTeam.getFlag().getCaptured()){
             capturePlayer.getPlayer().sendMessage(Component.text("Denna flagga är redan tagen!", NamedTextColor.RED));
         }
     }
