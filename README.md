@@ -22,7 +22,6 @@ A Capture The Flag (CTF) plugin for Minecraft using PaperMC, featuring teams, fl
 - Players are assigned to teams automatically.
 - Flags spawn at configured locations.
 - Right click enemy flags to take it, capture it at your own base.
-- 
 
 ## Dependencies
 - Paperweight Gradle plugin
