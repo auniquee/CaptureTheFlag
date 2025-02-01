@@ -16,7 +16,7 @@ A Capture The Flag (CTF) plugin for Minecraft using PaperMC, featuring teams, fl
 3. Locate the generated `.jar` file in the `build/libs` folder.
 4. Place the `.jar` file in the `plugins` folder of your PaperMC server.
 5. Configure teams, maps, and settings in the config files.
-6. Start the server and initiate the game with `/startctf` (or relevant command).
+6. Start the server and initiate the game with `/ctf [map]`.
 
 ## Usage
 - Players are assigned to teams automatically.
