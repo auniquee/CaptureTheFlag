@@ -130,9 +130,9 @@ public class Game {
             i++;
         }
         //POWERUPS
-        for (ArrayList<Float> coords : config.getPowerups(map)) {
-            Location loc = new Location(world, coords.get(0), coords.get(1), coords.get(2));
-            powerUps.add(new PowerUp(loc.clone(), null, true, true, 20*300)); // 30 ticks
+        for (ArrayList<Float> coords : config.getPowerUps(map)) {
+            Location loc = new Location(world, coords.get(0), coords.get(1), coords.get(2), coords.get(3), 0);
+            powerUps.add(new PowerUp(loc.clone(), null, true, true, 20*3)); // 3 sec
             powerUps.getLast().spawn();
         }
         /*
@@ -172,12 +172,12 @@ public class Game {
 
             for(CTFPlayer initializedPlayer : team.getPlayers()){
                 Component teamMessage = Component.text()
-                        .append(Component.text(initializedPlayer.getTeam().getName())
-                        .color(TextColor.fromHexString("#" + codes.get(initializedPlayer.getTeam().getName()))))
+                        .append(Component.text(initializedPlayer.getPlayerTeam().getName())
+                        .color(TextColor.fromHexString("#" + codes.get(initializedPlayer.getPlayerTeam().getName()))))
                         .build();
                 Component message = Component.text()
                         .append(Component.text("Du är lag ", NamedTextColor.GRAY))
-                        .append(Component.text(initializedPlayer.getTeam().getName(), initializedPlayer.getTeam().getColor()))
+                        .append(Component.text(initializedPlayer.getPlayerTeam().getName(), initializedPlayer.getPlayerTeam().getColor()))
                         .build();
                 initializedPlayer.getPlayer().teleport(team.getSpawn());
                 initializedPlayer.getPlayer().sendMessage(message);

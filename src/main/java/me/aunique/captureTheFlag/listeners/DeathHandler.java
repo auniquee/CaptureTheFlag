@@ -24,7 +24,6 @@ public class DeathHandler implements Listener {
 
         final int countdownTime = 5;
         CTFPlayer killedPlayer = game.getCTFPlayer(playerDeathEvent.getPlayer());
-        killedPlayer.setFlag(null);
         new BukkitRunnable() {
             int timeLeft = countdownTime;
             @Override
@@ -40,8 +39,12 @@ public class DeathHandler implements Listener {
                     ));
                     timeLeft--;
                 } else {
+
+                    killedPlayer.getHoldingFlagTeam().getFlag().captureFlag();
+                    killedPlayer.removeFlag();
+
                     playerDeathEvent.getPlayer().spigot().respawn();
-                    playerDeathEvent.getPlayer().teleport(killedPlayer.getTeam().getSpawn());
+                    playerDeathEvent.getPlayer().teleport(killedPlayer.getPlayerTeam().getSpawn());
                     playerDeathEvent.getPlayer().setGameMode(GameMode.ADVENTURE);
                     cancel();
                 }

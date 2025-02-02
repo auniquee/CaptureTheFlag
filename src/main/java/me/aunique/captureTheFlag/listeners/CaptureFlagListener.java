@@ -11,7 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import me.aunique.captureTheFlag.ctf_modules.Game;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -34,29 +33,17 @@ public class CaptureFlagListener implements Listener {
         // custom message, capturer ska inte få 2 rader, om egen flagga tagen ska texten vara röd etc
 
         // Om spelare har klickat på sin egen flagga
-        if(capturePlayer.getTeam().equals(stolenTeam)){
-            if (capturePlayer.getFlag() != null) { // Om spelaren håller på en flagga så ska den bli captured
-                capturePlayer.getFlag().getFlag().captureFlag();
-                capturePlayer.getPlayer().clearActivePotionEffects();
-                Bukkit.getServer().sendMessage(
+        if(capturePlayer.getPlayerTeam().equals(stolenTeam)){
+            if (capturePlayer.getHoldingFlagTeam() != null) { // Om spelaren håller på en flagga så ska den bli captured
+                Bukkit.getServer().broadcast(
                         Component.text()
-                                .append(Component.text(capturePlayer.getPlayer().getName() + " ", capturePlayer.getTeam().getColor()))
+                                .append(Component.text(capturePlayer.getPlayer().getName() + " ", capturePlayer.getPlayerTeam().getColor()))
                                 .append(Component.text("har fångatagit ", NamedTextColor.GRAY))
-                                .append(Component.text(capturePlayer.getFlag().getName().toUpperCase() + "S ", capturePlayer.getFlag().getColor()))
+                                .append(Component.text(capturePlayer.getHoldingFlagTeam().getName().toUpperCase() + "S ", capturePlayer.getHoldingFlagTeam().getColor()))
                                 .append(Component.text("flagga!", NamedTextColor.GRAY))
                                 .build()
                 );
-                capturePlayer.getTeam().incrementFlag();
-                capturePlayer.setFlag(null);
-                capturePlayer.addMynt(100);
-                ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
-                LeatherArmorMeta meta = (LeatherArmorMeta) helmet.getItemMeta();
-                meta.setColor(Color.fromRGB(
-                        Integer.parseInt(capturePlayer.getTeam().getColor().asHexString().substring(1), 16))
-                );
-                helmet.setItemMeta(meta);
-                capturePlayer.getPlayer().getInventory().setHelmet(helmet);
-
+                capturePlayer.captureFlag(); // change player stats (set holdingteam = false), remove effects, and restore helmet
             }else if(capturePlayer.getPlayer().getGameMode() != GameMode.SPECTATOR){
                 captureFlagEvent.getPlayer().sendMessage(Component.text("Du kan inte ta din egen flagga!", NamedTextColor.RED));
             }
@@ -64,7 +51,7 @@ public class CaptureFlagListener implements Listener {
 
         }
         // Om spelaren klickar på en flagga men har redan tagit en annan flagga
-        else if (capturePlayer.getFlag() != null) {
+        else if (capturePlayer.getHoldingFlagTeam() != null) {
             captureFlagEvent.getPlayer().sendMessage(Component.text("Du har redan tagit en flagga!", NamedTextColor.RED));
         }
         // Om spelaren klickar på en flagga för att ta den
@@ -74,10 +61,10 @@ public class CaptureFlagListener implements Listener {
             for(CTFPlayer player : players){
 
                 //Message för spelaren vars flagga blir tagen
-                if(player.getTeam() == stolenTeam){
+                if(player.getPlayerTeam() == stolenTeam){
                     message = Component.text()
                             .append(Component.text("Din flagga har blivit stulen av ", NamedTextColor.RED))
-                            .append(Component.text(capturePlayer.getPlayer().getName() + "!", capturePlayer.getTeam().getColor()))
+                            .append(Component.text(capturePlayer.getPlayer().getName() + "!", capturePlayer.getPlayerTeam().getColor()))
                             .append(Component.text("!", NamedTextColor.RED))
                             .build();
                     player.getPlayer().playSound(capturePlayer.getPlayer().getLocation(), Sound.BLOCK_ANVIL_LAND, .3F, .8F);
@@ -95,7 +82,7 @@ public class CaptureFlagListener implements Listener {
                             .build();
                     player.getPlayer().sendMessage(message);
 
-                    player.setFlag(stolenTeam);
+                    player.setHoldingFlagTeam(stolenTeam);
                     //player.addMynt(1);
 
                     ItemStack banner = config.getTeamBanner(stolenTeam, Game.getInstance().getMap());
@@ -105,7 +92,7 @@ public class CaptureFlagListener implements Listener {
                 // message till resten av spelet när en flagga tas
                 else {
                     message = Component.text()
-                            .append(Component.text(capturePlayer.getPlayer().getName(), capturePlayer.getTeam().getColor()))
+                            .append(Component.text(capturePlayer.getPlayer().getName(), capturePlayer.getPlayerTeam().getColor()))
                             .append(Component.text(" Har tagit ", NamedTextColor.GRAY))
                             .append(Component.text(stolenTeam.getName().toUpperCase() + "S ", stolenTeam.getColor()))
                             .append(Component.text("flagga!", NamedTextColor.GRAY))

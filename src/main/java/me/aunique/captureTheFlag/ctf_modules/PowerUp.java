@@ -3,6 +3,7 @@ package me.aunique.captureTheFlag.ctf_modules;
 import me.aunique.captureTheFlag.CaptureTheFlag;
 import me.aunique.captureTheFlag.teamsAndPlayers.CTFPlayer;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -46,13 +47,13 @@ public class PowerUp {
         this.location = loc;
         this.spawned = false;
         this.powerUpType = powerUpType;
+        this.randomizePowerUp = randomizePowerUp;
+        this.respawnInterval = respawnInterval;
         if(respawnSelf){
             startSpawningPowerUps();
         }else{
             spawnTask = null;
         }
-        this.randomizePowerUp = randomizePowerUp;
-        this.respawnInterval = respawnInterval;
         itemDisplay = null;
         powerUpTitle = null;
         powerUpSubtitle = null;
@@ -70,8 +71,8 @@ public class PowerUp {
             itemDisplay = (ItemDisplay) location.getWorld().spawnEntity(location, EntityType.ITEM_DISPLAY);
 
             Transformation transformation = new Transformation(
-                    new Vector3f(0.0f, 0.5f, 0.0f), // 0.5 over the ground
-                    new Quaternionf().rotateY((float) Math.toRadians(90)), //rotate 90 degrees
+                    new Vector3f(0.0f, 0.8f, 0.0f), // 0.5 over the ground
+                    new Quaternionf(), //new Quaternionf().rotateY((float) Math.toRadians(90)), //rotate 90 degrees
                     new Vector3f(1.0f, 1.0f, 1.0f),
                     new Quaternionf()
             );
@@ -100,7 +101,12 @@ public class PowerUp {
                 itemDisplay.setItemStack(new ItemStack(Material.FEATHER));
                 powerUpTitle.customName(
                         Component.text()
-                                .append(Component.text("a"))
+                                .append(Component.text("TEAM SPEED", NamedTextColor.AQUA))
+                                .build()
+                );
+                powerUpTitle.customName(
+                        Component.text()
+                                .append(Component.text("30 sekunder", NamedTextColor.AQUA))
                                 .build()
                 );
             }
@@ -125,7 +131,7 @@ public class PowerUp {
         if(!spawned){
             return;
         }
-        for (Player teamPlayer : takePlayer.getTeam().getPlayers().stream().map(CTFPlayer::getPlayer).toList()){
+        for (Player teamPlayer : takePlayer.getPlayerTeam().getPlayers().stream().map(CTFPlayer::getPlayer).toList()){
 
 
             switch (powerUpType) {
@@ -171,7 +177,7 @@ public class PowerUp {
     }
 
 
-    public void setRespawnSelf(boolean respawnSelf) {
+    public void setSpawningPowerUps(boolean respawnSelf) {
         if (respawnSelf) {
             startSpawningPowerUps();
         } else {

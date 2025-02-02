@@ -1,7 +1,6 @@
 package me.aunique.captureTheFlag.utils;
 
 import me.aunique.captureTheFlag.teamsAndPlayers.Team;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -110,7 +109,7 @@ public class ConfigManager {
         return item;
     }
 
-    public ArrayList<ArrayList<Float>> getPowerups(String map){
+    public ArrayList<ArrayList<Float>> getPowerUps(String map){
         ArrayList<ArrayList<Float>> powerups = new ArrayList<>();
         ConfigurationSection section = config.getConfigurationSection("maps." + map + ".powerup-locations");
         if(section == null){
