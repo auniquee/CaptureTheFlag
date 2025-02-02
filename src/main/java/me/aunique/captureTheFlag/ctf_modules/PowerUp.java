@@ -53,8 +53,6 @@ public class PowerUp {
         }
         this.randomizePowerUp = randomizePowerUp;
         this.respawnInterval = respawnInterval;
-        powerUpTitle = null;
-        powerUpSubtitle = null;
         itemDisplay = null;
         powerUpTitle = null;
         powerUpSubtitle = null;
@@ -81,15 +79,19 @@ public class PowerUp {
         }
         if(powerUpTitle == null){
             powerUpTitle = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
+            powerUpTitle.setCustomNameVisible(true);
             powerUpTitle.setVisible(false);
             powerUpTitle.setInvulnerable(true);
             powerUpTitle.setGravity(false);
         }
         if(powerUpSubtitle == null){
+            location.add(0, -0.3, 0);
             powerUpSubtitle = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
+            powerUpSubtitle.setCustomNameVisible(true);
             powerUpSubtitle.setVisible(false);
             powerUpSubtitle.setInvulnerable(true);
             powerUpSubtitle.setGravity(false);
+            location.add(0, 0.3, 0);
         }
 
 
@@ -182,7 +184,7 @@ public class PowerUp {
             return; // Prevent duplicate tasks
         }
 
-        spawnTask = Bukkit.getScheduler().runTaskTimerAsynchronously(CaptureTheFlag.getInstance(), this::spawn, respawnInterval, respawnInterval);
+        spawnTask = Bukkit.getScheduler().runTaskTimer(CaptureTheFlag.getInstance(), this::spawn, respawnInterval, respawnInterval);
     }
 
     private void stopSpawningPowerUps() {

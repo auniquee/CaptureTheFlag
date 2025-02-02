@@ -33,6 +33,9 @@ tasks {
     processResources {
         filteringCharset = "UTF-8"
     }
+    build {
+        finalizedBy("copyJars")
+    }
 }
 
 tasks.register("copyJars", Copy::class) {
