@@ -4,6 +4,7 @@ import me.aunique.captureTheFlag.commands.StartCommand;
 import me.aunique.captureTheFlag.listeners.CaptureFlagListener;
 import me.aunique.captureTheFlag.listeners.DeathHandler;
 import me.aunique.captureTheFlag.listeners.GameRestrictions;
+import me.aunique.captureTheFlag.listeners.powerUpListener;
 import me.aunique.captureTheFlag.utils.ConfigManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,6 +30,7 @@ public final class CaptureTheFlag extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CaptureFlagListener(), this);
         getServer().getPluginManager().registerEvents(new GameRestrictions(), this);
         getServer().getPluginManager().registerEvents(new DeathHandler(), this);
+        getServer().getPluginManager().registerEvents(new powerUpListener(), this);
         //getServer().getPluginManager().registerEvents(new CaptureFlagEventTrigger(), this);
 
 

@@ -5,6 +5,7 @@ import me.aunique.captureTheFlag.events.CaptureFlagEventTrigger;
 import me.aunique.captureTheFlag.teamsAndPlayers.CTFPlayer;
 import me.aunique.captureTheFlag.teamsAndPlayers.Team;
 import me.aunique.captureTheFlag.utils.ConfigManager;
+import me.aunique.captureTheFlag.utils.powerUpHitbox;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -25,7 +26,7 @@ public class Game {
     private final String map;
     private final List<FlagEntity> flags;
     private ArrayList<PowerUp> powerUps;
-    private static Game instance;
+    private ArrayList<powerUpHitbox> hitboxes;
 
     public Game(String map){
         this.teams = new HashMap<>();
@@ -34,7 +35,9 @@ public class Game {
         this.map = map;
         this.powerUps = new ArrayList<>();
         this.flags = new ArrayList<>();
+        this.hitboxes = new ArrayList<>();
     }
+    private static Game instance;
     public static ConfigManager config = ConfigManager.getInstance();
 
     public static Game getInstance(){
@@ -73,6 +76,9 @@ public class Game {
             }
         }
         return null;
+    }
+    public ArrayList<powerUpHitbox> getHitboxes(){
+        return this.hitboxes;
     }
 
     public void initiateGame(){
@@ -132,7 +138,10 @@ public class Game {
         //POWERUPS
         for (ArrayList<Float> coords : config.getPowerUps(map)) {
             Location loc = new Location(world, coords.get(0), coords.get(1), coords.get(2), coords.get(3), 0);
-            powerUps.add(new PowerUp(loc.clone(), null, true, true, 20*3)); // 3 sec
+            powerUps.add(new PowerUp(loc.clone(), null, true, true, 20*7)); // 7 sec
+            hitboxes.add(new powerUpHitbox(powerUps.getLast(), loc, powerUps.getLast().toString()));
+            powerUps.getLast().setHitbox(hitboxes.getLast());
+            hitboxes.getLast().setPowerUp(powerUps.getLast()); // circular reference
             powerUps.getLast().spawn();
         }
         /*
