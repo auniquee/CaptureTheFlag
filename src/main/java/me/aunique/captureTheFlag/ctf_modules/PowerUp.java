@@ -7,10 +7,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemDisplay;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -60,6 +57,7 @@ public class PowerUp {
     }
 
     public void spawn(){
+
         if(spawned){
             return;
         }
@@ -104,9 +102,9 @@ public class PowerUp {
                                 .append(Component.text("TEAM SPEED", NamedTextColor.AQUA))
                                 .build()
                 );
-                powerUpTitle.customName(
+                powerUpSubtitle.customName(
                         Component.text()
-                                .append(Component.text("30 sekunder", NamedTextColor.AQUA))
+                                .append(Component.text("30 sekunder", NamedTextColor.GRAY))
                                 .build()
                 );
             }
@@ -114,15 +112,40 @@ public class PowerUp {
                 itemDisplay.setItemStack(new ItemStack(Material.IRON_SWORD));
                 powerUpTitle.customName(
                         Component.text()
-                                .append(Component.text("a"))
+                                .append(Component.text("SWORD UPGRADE", NamedTextColor.AQUA))
+                                .build()
+                );
+                powerUpSubtitle.customName(
+                        Component.text()
+                                .append(Component.text("30 sekunder", NamedTextColor.GRAY))
                                 .build()
                 );
             }
             case TEAM_FLAG_PROTECTION -> {
                 itemDisplay.setItemStack(new ItemStack(Material.BARRIER));
+                powerUpTitle.customName(
+                        Component.text()
+                                .append(Component.text("FLAG PROTECTION", NamedTextColor.AQUA))
+                                .build()
+                );
+                powerUpSubtitle.customName(
+                        Component.text()
+                                .append(Component.text("10 sekunder", NamedTextColor.GRAY))
+                                .build()
+                );
             }
             case TEAM_ARMOR_UPGRADE -> {
                 itemDisplay.setItemStack(new ItemStack(Material.IRON_CHESTPLATE));
+                powerUpTitle.customName(
+                        Component.text()
+                                .append(Component.text("TEAM ARMOR UPGRADE", NamedTextColor.AQUA))
+                                .build()
+                );
+                powerUpSubtitle.customName(
+                        Component.text()
+                                .append(Component.text("30 sekunder", NamedTextColor.GRAY))
+                                .build()
+                );
             }
         }
     }
