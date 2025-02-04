@@ -164,53 +164,59 @@ public class PowerUp {
         itemDisplay.setItemStack(new ItemStack(Material.AIR)); //make in invis
         powerUpTitle.text(null);
         powerUpSubtitle.text(null);
-
-        for (Player teamPlayer : takePlayer.getPlayerTeam().getPlayers().stream().map(CTFPlayer::getPlayer).toList()){
+        teamLoop:
+        for (CTFPlayer teamPlayer : takePlayer.getPlayerTeam().getPlayers()){
 
 
             switch (powerUpType) {
                 case TEAM_SPEED ->
-                    teamPlayer.addPotionEffect(
+                    teamPlayer.getPlayer().addPotionEffect(
                             new PotionEffect(PotionEffectType.SPEED, 30, 0, false, true)
                     );
 
                 case TEAM_SWORD_UPGRADE -> {
-                    if(teamPlayer.getInventory().contains(Material.STONE_SWORD)){
-                        teamPlayer.getInventory().remove(Material.STONE_SWORD);
-                        teamPlayer.getInventory().addItem(new ItemStack(Material.IRON_SWORD));
+                    if(teamPlayer.getPlayer().getInventory().contains(Material.STONE_SWORD)){
+                        teamPlayer.getPlayer().getInventory().remove(Material.STONE_SWORD);
+                        teamPlayer.getPlayer().getInventory().addItem(new ItemStack(Material.IRON_SWORD));
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                if(teamPlayer.getItemOnCursor().getType().equals(Material.IRON_SWORD)){
-                                    teamPlayer.setItemOnCursor(new ItemStack(Material.AIR));
+                                if(teamPlayer.getPlayer().getItemOnCursor().getType().equals(Material.IRON_SWORD)){
+                                    teamPlayer.getPlayer().setItemOnCursor(new ItemStack(Material.AIR));
                                 }
-                                teamPlayer.getInventory().remove(Material.IRON_SWORD);
-                                teamPlayer.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
+                                teamPlayer.getPlayer().getInventory().remove(Material.IRON_SWORD);
+                                teamPlayer.getPlayer().getInventory().addItem(new ItemStack(Material.STONE_SWORD));
 
                             }
                         }.runTaskLaterAsynchronously(CaptureTheFlag.getInstance(), 20*30); // 30 sek
                     }
                 }
                 case TEAM_FLAG_PROTECTION -> {
+                    teamPlayer.getPlayerTeam().getFlag().setCurrentlyProtected(true);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            teamPlayer.getPlayerTeam().getFlag().setCurrentlyProtected(false);
 
+                        }
+                    }.runTaskLaterAsynchronously(CaptureTheFlag.getInstance(), 20*7); // 7 sek
+                    break teamLoop; //aja baja
                 }
                 case TEAM_ARMOR_UPGRADE -> {
-                    if(Objects.requireNonNull(teamPlayer.getInventory().getChestplate()).getType().equals(Material.LEATHER_CHESTPLATE)){
-                        teamPlayer.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
-                        teamPlayer.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
+                    if(Objects.requireNonNull(teamPlayer.getPlayer().getInventory().getChestplate()).getType().equals(Material.LEATHER_CHESTPLATE)){
+                        teamPlayer.getPlayer().getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+                        teamPlayer.getPlayer().getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
 
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                teamPlayer.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
-                                teamPlayer.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
+                                teamPlayer.getPlayer().getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+                                teamPlayer.getPlayer().getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
 
                             }
                         }.runTaskLaterAsynchronously(CaptureTheFlag.getInstance(), 20*30); // 30 sek
                     }
-                    System.out.println("team_armor");
                 }
-                default -> System.out.println("hello");
             }
         }
         this.spawned = false;
@@ -218,14 +224,6 @@ public class PowerUp {
 
     public void setHitbox(powerUpHitbox hitbox) {
         this.hitbox = hitbox;
-    }
-
-    public void setSpawningPowerUps(boolean respawnSelf) {
-        if (respawnSelf) {
-            startSpawningPowerUps();
-        } else {
-            stopSpawningPowerUps();
-        }
     }
 
     public void startSpawningPowerUps() {
