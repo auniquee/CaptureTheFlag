@@ -169,11 +169,11 @@ public class PowerUp {
 
 
             switch (powerUpType) {
-                case TEAM_SPEED -> {
+                case TEAM_SPEED ->
                     teamPlayer.addPotionEffect(
                             new PotionEffect(PotionEffectType.SPEED, 30, 0, false, true)
                     );
-                }
+
                 case TEAM_SWORD_UPGRADE -> {
                     if(teamPlayer.getInventory().contains(Material.STONE_SWORD)){
                         teamPlayer.getInventory().remove(Material.STONE_SWORD);
@@ -196,13 +196,14 @@ public class PowerUp {
                 }
                 case TEAM_ARMOR_UPGRADE -> {
                     if(Objects.requireNonNull(teamPlayer.getInventory().getChestplate()).getType().equals(Material.LEATHER_CHESTPLATE)){
-                        teamPlayer.getInventory().remove(Material.LEATHER_CHESTPLATE);
-                        teamPlayer.getInventory().addItem(new ItemStack(Material.IRON_CHESTPLATE)); //iron pants + boots
+                        teamPlayer.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+                        teamPlayer.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
+
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                teamPlayer.getInventory().remove(Material.IRON_CHESTPLATE);
-                                teamPlayer.getInventory().addItem(new ItemStack(Material.LEATHER_CHESTPLATE));
+                                teamPlayer.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+                                teamPlayer.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
 
                             }
                         }.runTaskLaterAsynchronously(CaptureTheFlag.getInstance(), 20*30); // 30 sek
