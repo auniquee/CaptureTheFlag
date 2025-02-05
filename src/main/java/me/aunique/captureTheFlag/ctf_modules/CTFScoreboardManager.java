@@ -107,6 +107,7 @@ public void updateScoreboard() {
             );
             playerName.setScore(score--);
         }
+        //hello
 
 }
     public static CTFScoreboardManager getInstance() {
