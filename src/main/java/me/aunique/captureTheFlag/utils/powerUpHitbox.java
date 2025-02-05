@@ -19,7 +19,7 @@ public class powerUpHitbox {
 
     public void setHitbox(Location hitboxLocation, String id) {
         this.hitbox = hitboxLocation.getWorld().spawn(hitboxLocation, AreaEffectCloud.class);
-        hitbox.setRadius(1.5f);
+        hitbox.setRadius(1.75f); //huge hitbox so for both it seems faster and large hitboxes are nice
         hitbox.setDuration(Integer.MAX_VALUE);
         hitbox.setWaitTime(0); // Check every tick
         hitbox.setBasePotionType(PotionType.SWIFTNESS);

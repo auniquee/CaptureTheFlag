@@ -17,7 +17,6 @@ public class powerUpListener implements Listener {
         if(hitboxCollisionEvent.getAffectedEntities().isEmpty()){
             return;
         }
-        System.out.println("hello!!");
         hitboxCollisionEvent.setCancelled(true);
         Game gameInstance = Game.getInstance();
 

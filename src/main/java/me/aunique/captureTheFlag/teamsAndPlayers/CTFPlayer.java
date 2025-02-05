@@ -1,10 +1,14 @@
 package me.aunique.captureTheFlag.teamsAndPlayers;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.potion.PotionEffectType;
 
 public class CTFPlayer{
     final private Player player;
@@ -14,6 +18,7 @@ public class CTFPlayer{
     private Team playerTeam;
     private Team holdingFlagTeam;
     private int captures;
+    private int killStreak;
 
     public CTFPlayer(Player player, Team team){
         this.player = player;
@@ -30,15 +35,24 @@ public class CTFPlayer{
     public void setHoldingFlagTeam(Team team){ this.holdingFlagTeam = team; }
 
     public void captureFlag() {
-        if (holdingFlagTeam != null) { // Om spelaren håller på en flagga så ska den bli captured
-            holdingFlagTeam.getFlag().captureFlag(); // respawn flag
-            playerTeam.incrementFlag();
-            mynt += 100;
-            removeFlag();
+        if (this.holdingFlagTeam != null) { // Om spelaren håller på en flagga så ska den bli captured
+
+            playerDie();
+            this.holdingFlagTeam.getFlag().restoreFlag(); // respawn flag
+            this.playerTeam.incrementFlag();
+            this.mynt += 100;
+            this.captures++;
         }
     }
-    public void removeFlag(){
-        player.clearActivePotionEffects();
+    public void playerDie(){
+        if(this.holdingFlagTeam != null){
+            player.removePotionEffect(PotionEffectType.GLOWING);
+            player.removePotionEffect(PotionEffectType.SLOWNESS); //removing effects this way to avoid removing swiftness
+        }else{ //in case of death
+            this.killStreak = 0;
+            this.deaths++;
+        }
+
         holdingFlagTeam = null;
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
         LeatherArmorMeta meta = (LeatherArmorMeta) helmet.getItemMeta();
@@ -47,6 +61,7 @@ public class CTFPlayer{
         );
         helmet.setItemMeta(meta);
         player.getInventory().setHelmet(helmet);
+
     }
     public Player getPlayer(){
         return this.player;
@@ -69,10 +84,17 @@ public class CTFPlayer{
     }
 
     public void incKills(){
+        this.killStreak++;
         this.kills++;
+        if(killStreak % 5 == 0){
+            Bukkit.getServer().broadcast(
+                    Component.text()
+                            .append(Component.text(this.player.getName(), this.playerTeam.getColor()))
+                            .append(Component.text(" har en killstreak på ", NamedTextColor.GRAY))
+                            .append(Component.text(this.killStreak, NamedTextColor.RED))
+                            .build()
+            );
+        }
     }
 
-    public void incDeaths(){
-        this.deaths++;
-    }
 }

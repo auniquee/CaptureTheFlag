@@ -11,6 +11,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -139,7 +140,9 @@ public class Game {
         for (ArrayList<Float> coords : config.getPowerUps(map)) {
             Location loc = new Location(world, coords.get(0), coords.get(1), coords.get(2), coords.get(3), 0);
             powerUps.add(new PowerUp(loc.clone(), null, true, true, 20*7)); // 7 sec
+            loc.add(0, 1, 0); //align hitbox so that you can jump over it
             hitboxes.add(new powerUpHitbox(powerUps.getLast(), loc, powerUps.getLast().toString()));
+            loc.add(0, -1, 0);
             powerUps.getLast().setHitbox(hitboxes.getLast());
             hitboxes.getLast().setPowerUp(powerUps.getLast()); // circular reference
             powerUps.getLast().spawn();
@@ -205,6 +208,7 @@ public class Game {
                             Color.fromRGB(
                                     Integer.parseInt(team.getColor().asHexString().substring(1), 16))
                     );
+                    meta.setUnbreakable(true);
                     piece.setItemMeta(meta);
                     piece.addItemFlags(ItemFlag.HIDE_DYE);
 
@@ -221,5 +225,19 @@ public class Game {
 
     public void gameEnd(){
 
+        isRunning = false;
+        //fråga martin om hjälp
+/*
+        World world = Bukkit.getWorld(config.getWorld(map));
+        if(!world.getEntities().isEmpty()){
+            for (Entity entity : world.getEntities()) {
+                if(entity.getType() != EntityType.PLAYER){
+                    // kill?
+                }
+            }
+
+        }
+
+ */
     }
 }

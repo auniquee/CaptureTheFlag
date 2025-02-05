@@ -94,7 +94,7 @@ public class FlagEntity {
             subTitle.customName(Component.text("Flaggan är tagen!", NamedTextColor.RED));
         }
     }
-    public void captureFlag(){
+    public void restoreFlag(){
         if(this.captured) {
             this.captured = false;
             bannerDisplay.setBlock(ConfigManager.getInstance().getTeamBanner(team, Game.getInstance().getMap()).getType().createBlockData());

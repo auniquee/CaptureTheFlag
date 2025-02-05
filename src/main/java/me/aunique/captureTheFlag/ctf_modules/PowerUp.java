@@ -88,15 +88,20 @@ public class PowerUp {
         if(powerUpTitle == null){
             location.add(0, 1.8, 0); // higher the text a bit
             powerUpTitle = (TextDisplay) location.getWorld().spawnEntity(location, EntityType.TEXT_DISPLAY);
-
+            powerUpTitle.setBillboard(Display.Billboard.CENTER); //make it act like nametag
         }
+
         if(powerUpSubtitle == null){
             location.add(0, -0.3, 0);
             powerUpSubtitle = (TextDisplay) location.getWorld().spawnEntity(location, EntityType.TEXT_DISPLAY);
             location.add(0, -1.5, 0); // restore location
+            powerUpSubtitle.setBillboard(Display.Billboard.CENTER); //make it act like nametag
         }
+
         if(hitbox.getHitbox() == null){
+            location.add(0, 1, 0);
             hitbox.setHitbox(location, this.toString());
+            location.add(0, -1, 0);
         }
 
         switch (powerUpType) {
@@ -113,6 +118,8 @@ public class PowerUp {
                                 .build()
                 );
             }
+
+
             case TEAM_SWORD_UPGRADE -> {
                 itemDisplay.setItemStack(new ItemStack(Material.IRON_SWORD));
                 powerUpTitle.text(
@@ -126,6 +133,8 @@ public class PowerUp {
                                 .build()
                 );
             }
+
+
             case TEAM_FLAG_PROTECTION -> {
                 itemDisplay.setItemStack(new ItemStack(Material.BARRIER));
                 powerUpTitle.text(
@@ -139,6 +148,8 @@ public class PowerUp {
                                 .build()
                 );
             }
+
+
             case TEAM_ARMOR_UPGRADE -> {
                 itemDisplay.setItemStack(new ItemStack(Material.IRON_CHESTPLATE));
                 powerUpTitle.text(
@@ -156,7 +167,6 @@ public class PowerUp {
     }
 
     public void takePowerUp(CTFPlayer takePlayer){
-        System.out.println("walla");
         if(!spawned){
             return;
         }
@@ -171,8 +181,9 @@ public class PowerUp {
             switch (powerUpType) {
                 case TEAM_SPEED ->
                     teamPlayer.getPlayer().addPotionEffect(
-                            new PotionEffect(PotionEffectType.SPEED, 30, 0, false, true)
+                            new PotionEffect(PotionEffectType.SPEED, 30*20, 0, false, true)
                     );
+
 
                 case TEAM_SWORD_UPGRADE -> {
                     if(teamPlayer.getPlayer().getInventory().contains(Material.STONE_SWORD)){
@@ -191,6 +202,8 @@ public class PowerUp {
                         }.runTaskLaterAsynchronously(CaptureTheFlag.getInstance(), 20*30); // 30 sek
                     }
                 }
+
+
                 case TEAM_FLAG_PROTECTION -> {
                     teamPlayer.getPlayerTeam().getFlag().setCurrentlyProtected(true);
                     new BukkitRunnable() {
@@ -202,16 +215,20 @@ public class PowerUp {
                     }.runTaskLaterAsynchronously(CaptureTheFlag.getInstance(), 20*7); // 7 sek
                     break teamLoop; //aja baja
                 }
+
+
                 case TEAM_ARMOR_UPGRADE -> {
                     if(Objects.requireNonNull(teamPlayer.getPlayer().getInventory().getChestplate()).getType().equals(Material.LEATHER_CHESTPLATE)){
+                        ItemStack playerBoots = teamPlayer.getPlayer().getInventory().getBoots();
+                        ItemStack playerLeggings = teamPlayer.getPlayer().getInventory().getLeggings();
                         teamPlayer.getPlayer().getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
                         teamPlayer.getPlayer().getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
 
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                teamPlayer.getPlayer().getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
-                                teamPlayer.getPlayer().getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
+                                teamPlayer.getPlayer().getInventory().setLeggings(playerLeggings);
+                                teamPlayer.getPlayer().getInventory().setBoots(playerBoots);
 
                             }
                         }.runTaskLaterAsynchronously(CaptureTheFlag.getInstance(), 20*30); // 30 sek

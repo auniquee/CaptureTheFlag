@@ -39,9 +39,10 @@ public class DeathHandler implements Listener {
                     ));
                     timeLeft--;
                 } else {
-
-                    killedPlayer.getHoldingFlagTeam().getFlag().captureFlag();
-                    killedPlayer.removeFlag();
+                    if(killedPlayer.getHoldingFlagTeam() != null){
+                        killedPlayer.getHoldingFlagTeam().getFlag().restoreFlag();
+                    }
+                    killedPlayer.playerDie();
 
                     playerDeathEvent.getPlayer().spigot().respawn();
                     playerDeathEvent.getPlayer().teleport(killedPlayer.getPlayerTeam().getSpawn());
