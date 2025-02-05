@@ -82,7 +82,7 @@ public class PowerUp {
 
         }
 
-        itemDisplay.setGlowing(true);
+
         itemDisplay.setGlowColorOverride(Color.AQUA);
 
         if(powerUpTitle == null){
@@ -170,7 +170,7 @@ public class PowerUp {
         if(!spawned){
             return;
         }
-        itemDisplay.setGlowing(false); // not glow
+
         itemDisplay.setItemStack(new ItemStack(Material.AIR)); //make in invis
         powerUpTitle.text(null);
         powerUpSubtitle.text(null);

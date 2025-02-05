@@ -65,11 +65,11 @@ public class CaptureFlagListener implements Listener {
                     message = Component.text()
                             .append(Component.text("Din flagga har blivit stulen av ", NamedTextColor.RED))
                             .append(Component.text(capturePlayer.getPlayer().getName() + "!", capturePlayer.getPlayerTeam().getColor()))
-                            .append(Component.text("!", NamedTextColor.RED))
                             .build();
                     player.getPlayer().playSound(capturePlayer.getPlayer().getLocation(), Sound.BLOCK_ANVIL_LAND, .3F, .8F);
                     player.getPlayer().sendMessage(message);
                 }
+
 
                 // Message till spelaren som har tagit en flagga
                 else if(player == capturePlayer) {
@@ -81,7 +81,6 @@ public class CaptureFlagListener implements Listener {
                             .append(Component.text(" flagga!", NamedTextColor.GRAY))
                             .build();
                     player.getPlayer().sendMessage(message);
-
                     player.setHoldingFlagTeam(stolenTeam);
                     //player.addMynt(1);
 

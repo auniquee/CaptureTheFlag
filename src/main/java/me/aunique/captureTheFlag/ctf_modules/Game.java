@@ -55,13 +55,17 @@ public class Game {
                 .findAny()
                 .orElse(null);
     }
-    public static ArrayList<CTFPlayer> getAllPlayers(){
+
+    public ArrayList<CTFPlayer> getAllPlayers(){
         return players;
     }
+
     public void setPlayerTeam(Player p, String team){
         teams.get(team).addPlayer(getCTFPlayer(p));
     }
+
     public String getMap() { return this.map; }
+
     public void addTeam(Team team) {
         teams.put(team.getName(), team);
     }
@@ -94,7 +98,7 @@ public class Game {
         World world = Bukkit.getWorld(config.getWorld(map));
         ArrayList<FlagEntity> flagEntities = new ArrayList<>();
         Location spawnLocation;
-        for (String teamName : teamNames) {
+        for (String teamName : teamNames) { // create teams and flags
             Map<String, List<Float>> spawnPoints = config.getSpawns(map);
             spawnLocation = new Location(
                     Bukkit.getWorld(config.getWorld(map)),
@@ -136,6 +140,11 @@ public class Game {
             teams.get(teamNames.get(i%4)).addPlayer(players.getLast());
             i++;
         }
+
+        CTFScoreboardManager scoreboardManager = new CTFScoreboardManager();
+        scoreboardManager.initiateScoreboard();
+        scoreboardManager.updateScoreboard();
+
         //POWERUPS
         for (ArrayList<Float> coords : config.getPowerUps(map)) {
             Location loc = new Location(world, coords.get(0), coords.get(1), coords.get(2), coords.get(3), 0);

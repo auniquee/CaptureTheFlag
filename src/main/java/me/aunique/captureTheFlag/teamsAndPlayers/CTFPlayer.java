@@ -37,13 +37,22 @@ public class CTFPlayer{
     public void captureFlag() {
         if (this.holdingFlagTeam != null) { // Om spelaren håller på en flagga så ska den bli captured
 
-            playerDie();
             this.holdingFlagTeam.getFlag().restoreFlag(); // respawn flag
+            playerDie();
             this.playerTeam.incrementFlag();
             this.mynt += 100;
             this.captures++;
         }
     }
+
+    public int getCaptures() {
+        return captures;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
     public void playerDie(){
         if(this.holdingFlagTeam != null){
             player.removePotionEffect(PotionEffectType.GLOWING);
