@@ -3,7 +3,7 @@ package me.aunique.captureTheFlag.listeners;
 import me.aunique.captureTheFlag.events.CaptureFlagEvent;
 import me.aunique.captureTheFlag.teamsAndPlayers.CTFPlayer;
 import me.aunique.captureTheFlag.teamsAndPlayers.Team;
-import me.aunique.captureTheFlag.utils.ConfigManager;
+import me.aunique.captureTheFlag.managers.ConfigManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;

@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.AreaEffectCloud;
+import org.bukkit.entity.Entity;
 import org.bukkit.potion.PotionType;
 
 public class powerUpHitbox {
@@ -39,7 +40,9 @@ public class powerUpHitbox {
         }
         return hitbox;
     }
-
+    public Entity getHitboxEntity(){
+        return hitbox;
+    }
     public PowerUp getPowerUp() {
         return powerUp;
     }

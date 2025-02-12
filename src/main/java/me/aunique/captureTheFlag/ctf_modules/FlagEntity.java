@@ -1,7 +1,7 @@
 package me.aunique.captureTheFlag.ctf_modules;
 
 import me.aunique.captureTheFlag.teamsAndPlayers.Team;
-import me.aunique.captureTheFlag.utils.ConfigManager;
+import me.aunique.captureTheFlag.managers.ConfigManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -15,6 +15,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.util.Transformation;
 import org.joml.Vector3f;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -22,7 +23,7 @@ public class FlagEntity {
     private final Location flagLocation;
     private Team team;
     private Boolean captured;
-    private ArmorStand armorStand;
+    private ArmorStand title;
     private ArmorStand subTitle;
     private BlockDisplay bannerDisplay;
     private final String banner;
@@ -32,7 +33,7 @@ public class FlagEntity {
     public FlagEntity(Location flagLocation, String banner){
         this.flagLocation = flagLocation.clone();
         this.team = null;
-        this.armorStand = null;
+        this.title = null;
         this.banner = banner;
         this.bannerDisplay = null;
         this.subTitle = null;
@@ -51,13 +52,13 @@ public class FlagEntity {
     public Team getTeam() { return team; }
 
     public void spawn(){
-        armorStand = (ArmorStand) flagLocation.getWorld().spawnEntity(flagLocation, EntityType.ARMOR_STAND);
+        title = (ArmorStand) flagLocation.getWorld().spawnEntity(flagLocation, EntityType.ARMOR_STAND);
         Component customName = Component.text(team.getName().toUpperCase() + "S FLAGGA", team.getColor(), TextDecoration.BOLD);
-        armorStand.customName(customName);
-        armorStand.setCustomNameVisible(true);
-        armorStand.setVisible(false);
-        armorStand.setInvulnerable(true);
-        armorStand.setGravity(false);
+        title.customName(customName);
+        title.setCustomNameVisible(true);
+        title.setVisible(false);
+        title.setInvulnerable(true);
+        title.setGravity(false);
         flagLocation.add(0, -0.3, 0);
 
         subTitle = (ArmorStand) flagLocation.getWorld().spawnEntity(flagLocation, EntityType.ARMOR_STAND);
@@ -90,7 +91,7 @@ public class FlagEntity {
         if(!this.captured){
             this.captured = true;
             bannerDisplay.setBlock(Material.BARRIER.createBlockData());
-            armorStand.setCustomNameVisible(false);
+            title.setCustomNameVisible(false);
             subTitle.customName(Component.text("Flaggan är tagen!", NamedTextColor.RED));
         }
     }
@@ -98,7 +99,7 @@ public class FlagEntity {
         if(this.captured) {
             this.captured = false;
             bannerDisplay.setBlock(ConfigManager.getInstance().getTeamBanner(team, Game.getInstance().getMap()).getType().createBlockData());
-            armorStand.setCustomNameVisible(true);
+            title.setCustomNameVisible(true);
             subTitle.customName(Component.text("(högerklicka)", NamedTextColor.GRAY));
         }
     }
@@ -106,14 +107,17 @@ public class FlagEntity {
         return this.captured;
     }
 
-    public Entity getEntity(){
-        if(armorStand == null){
+    public Entity getArmorstandEntity(){
+        if(title == null){
             System.out.println("ArmorStand hasn't been spawned yet!");
             return null;
         }
 
-        return (Entity) armorStand;
+        return (Entity) title;
 
+    }
+    public List<Entity> getEntities(){
+        return List.of(title, subTitle, bannerDisplay);
     }
 
 }

@@ -2,17 +2,19 @@ package me.aunique.captureTheFlag.ctf_modules;
 
 import me.aunique.captureTheFlag.CaptureTheFlag;
 import me.aunique.captureTheFlag.events.CaptureFlagEventTrigger;
+import me.aunique.captureTheFlag.managers.CTFScoreboardManager;
 import me.aunique.captureTheFlag.teamsAndPlayers.CTFPlayer;
 import me.aunique.captureTheFlag.teamsAndPlayers.Team;
-import me.aunique.captureTheFlag.utils.ConfigManager;
+import me.aunique.captureTheFlag.managers.ConfigManager;
 import me.aunique.captureTheFlag.utils.powerUpHitbox;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -28,6 +30,7 @@ public class Game {
     private final List<FlagEntity> flags;
     private ArrayList<PowerUp> powerUps;
     private ArrayList<powerUpHitbox> hitboxes;
+    private Listener flagListener;
 
     public Game(String map){
         this.teams = new HashMap<>();
@@ -37,6 +40,7 @@ public class Game {
         this.powerUps = new ArrayList<>();
         this.flags = new ArrayList<>();
         this.hitboxes = new ArrayList<>();
+        this.flagListener = null;
     }
     private static Game instance;
     public static ConfigManager config = ConfigManager.getInstance();
@@ -76,7 +80,7 @@ public class Game {
 
     public FlagEntity getFlagByEntity(Entity entity){
         for (FlagEntity flag : flags){
-            if(flag.getEntity().equals(entity)){
+            if(flag.getArmorstandEntity().equals(entity)){
                 return flag;
             }
         }
@@ -126,10 +130,10 @@ public class Game {
             flags.add(currentFlag);
 
         }
-        Bukkit.getServer().getPluginManager().registerEvents(new CaptureFlagEventTrigger(
-                flags.stream().map(FlagEntity::getEntity).collect(Collectors.toList())),
-                CaptureTheFlag.getInstance()
-        );
+        flagListener = new CaptureFlagEventTrigger(
+                flags.stream().map(FlagEntity::getArmorstandEntity).collect(Collectors.toList()));
+
+        Bukkit.getServer().getPluginManager().registerEvents(flagListener, CaptureTheFlag.getInstance());
 
         int i = 0;
         List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
@@ -231,22 +235,31 @@ public class Game {
         }
         isRunning = true;
     }
-
-    public void gameEnd(){
-
-        isRunning = false;
-        //fråga martin om hjälp
-/*
-        World world = Bukkit.getWorld(config.getWorld(map));
-        if(!world.getEntities().isEmpty()){
-            for (Entity entity : world.getEntities()) {
-                if(entity.getType() != EntityType.PLAYER){
-                    // kill?
-                }
-            }
-
-        }
-
+/*    private final Map<String, Team> teams;
+    private static ArrayList<CTFPlayer> players = new ArrayList<>();
+    private boolean isRunning = false;
+    private final String map;
+    private final List<FlagEntity> flags;
+    private ArrayList<PowerUp> powerUps;
+    private ArrayList<powerUpHitbox> hitboxes;
  */
+    public void gameEnd(){
+    //game end uninitializes the game
+
+        //kill all entities
+        for(FlagEntity flag : flags){
+            for(Entity entity : flag.getEntities()){
+                entity.remove();
+            }
+        }
+        for(PowerUp powerUp : powerUps){
+            for(Entity entity : powerUp.getAllEntities()){
+                entity.remove();
+            }
+        }
+        // remove flag listener
+        HandlerList.unregisterAll(flagListener);
+        isRunning = false;
+
     }
 }

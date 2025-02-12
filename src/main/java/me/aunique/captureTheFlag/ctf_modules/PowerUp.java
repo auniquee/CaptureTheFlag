@@ -17,6 +17,7 @@ import org.joml.Quaternionf;
 import org.joml.Random;
 import org.joml.Vector3f;
 
+import java.util.List;
 import java.util.Objects;
 
 public class PowerUp {
@@ -250,7 +251,14 @@ public class PowerUp {
 
         spawnTask = Bukkit.getScheduler().runTaskTimer(CaptureTheFlag.getInstance(), this::spawn, respawnInterval, respawnInterval);
     }
-
+    public List<Entity> getAllEntities(){
+        return List.of(
+                powerUpTitle,
+                powerUpSubtitle,
+                hitbox.getHitboxEntity(),
+                itemDisplay
+        );
+    }
     private void stopSpawningPowerUps() {
         if (spawnTask != null) {
             spawnTask.cancel();

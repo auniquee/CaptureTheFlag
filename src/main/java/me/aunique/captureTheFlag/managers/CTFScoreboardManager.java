@@ -1,11 +1,11 @@
-package me.aunique.captureTheFlag.ctf_modules;
+package me.aunique.captureTheFlag.managers;
 
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
+import me.aunique.captureTheFlag.ctf_modules.Game;
 import me.aunique.captureTheFlag.teamsAndPlayers.CTFPlayer;
 import me.aunique.captureTheFlag.teamsAndPlayers.Team;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.*;
 
