@@ -119,11 +119,11 @@ public class ConfigManager {
 
         //config.getFloatList("maps." + map + ".powerup-locations");
 
-        for(String powerup : section.getKeys(false)){
+        for(String powerUp : section.getKeys(false)){
             //System.out.println("maps." + map + ".teams." + team + ".spawn-point");
             //section = config.getConfigurationSection("maps." + map + ".teams." + team + ".spawn-point");
             //System.out.println(section);
-            powerups.add((ArrayList<Float>) section.getFloatList(powerup));
+            powerups.add((ArrayList<Float>) section.getFloatList(powerUp));
 
 
 

@@ -31,6 +31,7 @@ public class Game {
     private ArrayList<PowerUp> powerUps;
     private ArrayList<powerUpHitbox> hitboxes;
     private Listener flagListener;
+    private CTFScoreboardManager scoreboardManager;
 
     public Game(String map){
         this.teams = new HashMap<>();
@@ -41,6 +42,7 @@ public class Game {
         this.flags = new ArrayList<>();
         this.hitboxes = new ArrayList<>();
         this.flagListener = null;
+        scoreboardManager = null;
     }
     private static Game instance;
     public static ConfigManager config = ConfigManager.getInstance();
@@ -80,7 +82,7 @@ public class Game {
 
     public FlagEntity getFlagByEntity(Entity entity){
         for (FlagEntity flag : flags){
-            if(flag.getArmorstandEntity().equals(entity)){
+            if(flag.getInteractionEntity().equals(entity)){
                 return flag;
             }
         }
@@ -131,7 +133,7 @@ public class Game {
 
         }
         flagListener = new CaptureFlagEventTrigger(
-                flags.stream().map(FlagEntity::getArmorstandEntity).collect(Collectors.toList()));
+                flags.stream().map(FlagEntity::getInteractionEntity).collect(Collectors.toList()));
 
         Bukkit.getServer().getPluginManager().registerEvents(flagListener, CaptureTheFlag.getInstance());
 
@@ -145,9 +147,10 @@ public class Game {
             i++;
         }
 
-        CTFScoreboardManager scoreboardManager = new CTFScoreboardManager();
+        scoreboardManager = new CTFScoreboardManager();
         scoreboardManager.initiateScoreboard();
-        scoreboardManager.updateScoreboard();
+        //scoreboardManager.updateScoreboard();
+        scoreboardManager.startAutoRefresh();
 
         //POWERUPS
         for (ArrayList<Float> coords : config.getPowerUps(map)) {
@@ -160,27 +163,6 @@ public class Game {
             hitboxes.getLast().setPowerUp(powerUps.getLast()); // circular reference
             powerUps.getLast().spawn();
         }
-        /*
-
-
-
-        Scoreboard board = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
-        Objective objective;
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        objective.getScore(getAllPlayers().toString()).setScore(0);
-        for(CTFPlayer player : players){
-            try{
-                objective = board.registerNewObjective("capture_the_flag", "dummy", Component.text("Capture the Flag", NamedTextColor.GREEN));
-
-            }catch (IllegalArgumentException e){
-                objective =  board.getObjective("capture_the_flag").;
-            }
-            //board.
-            //player.getPlayer();
-        }
-
- */
-
     }
 
     public void startGame(boolean kaos){
@@ -202,7 +184,7 @@ public class Game {
                         .build();
                 Component message = Component.text()
                         .append(Component.text("Du är lag ", NamedTextColor.GRAY))
-                        .append(Component.text(initializedPlayer.getPlayerTeam().getName(), initializedPlayer.getPlayerTeam().getColor()))
+                        .append(Component.text(initializedPlayer.getPlayerTeam().getName().toUpperCase(), initializedPlayer.getPlayerTeam().getColor()))
                         .build();
                 initializedPlayer.getPlayer().teleport(team.getSpawn());
                 initializedPlayer.getPlayer().sendMessage(message);
@@ -228,7 +210,11 @@ public class Game {
                 }
 
                 initializedPlayer.getPlayer().getInventory().setArmorContents(armor);
-                initializedPlayer.getPlayer().getInventory().setItem(0, new ItemStack(Material.STONE_SWORD));
+                ItemStack sword = new ItemStack(Material.STONE_SWORD);
+                sword.editMeta(meta -> {
+                    meta.setUnbreakable(true);
+                });
+                initializedPlayer.getPlayer().getInventory().setItem(0, sword);
                 initializedPlayer.getPlayer().getInventory().setItem(1, config.getTeamBlock(team, map).asQuantity(64));
 
             }
@@ -257,9 +243,34 @@ public class Game {
                 entity.remove();
             }
         }
+        scoreboardManager.stopAutoRefresh();
+        scoreboardManager.scoreboardShutdown();
         // remove flag listener
         HandlerList.unregisterAll(flagListener);
         isRunning = false;
+        List<Team> topTeams = teams
+                .values()
+                .stream()
+                .sorted(Comparator.comparing(Team::getCapturedFlags).reversed())
+                .toList();
+
+        Bukkit.getServer().broadcast(Component.text()
+                .append(Component.text("Pallplatser - CTF", NamedTextColor.GRAY))
+                .append(Component.text("\n1. ", NamedTextColor.GRAY))
+                .append(Component.text(topTeams.getFirst().getName().toUpperCase(), topTeams.getFirst().getColor()))
+                .append(Component.text(" - " + topTeams.getFirst().getCapturedFlags(), NamedTextColor.GRAY))
+
+                .append(Component.text("\n2. ", NamedTextColor.GRAY))
+                .append(Component.text(topTeams.get(1).getName().toUpperCase(), topTeams.get(1).getColor()))
+                .append(Component.text(" - " + topTeams.get(1).getCapturedFlags(), NamedTextColor.GRAY))
+
+                .append(Component.text("\n3. ", NamedTextColor.GRAY))
+                .append(Component.text(topTeams.get(2).getName().toUpperCase(), topTeams.get(2).getColor()))
+                .append(Component.text(" - " + topTeams.get(2).getCapturedFlags(), NamedTextColor.GRAY))
+
+
+                .build()
+        );
 
     }
 }

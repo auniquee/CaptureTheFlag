@@ -21,20 +21,20 @@ public class StartCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(args.length < 2 || (args[0] != "end" && args[0] != "start" )){
+        if(args.length < 2 || (!args[0].equals("end") && !args[0].equals("start"))){
             Component message = Component.text("Använding: /ctf [start/end] [map]")
                 .color(TextColor.fromCSSHexString("#992020")
             );
             sender.sendMessage(message);
             return true;
         }
-        if(args[0] == "start"){
+        if(args[0].equals("start")){
             if (!ConfigManager.getInstance().getMaps().contains(args[1])){
                 sender.sendMessage(Component.text("Ogilitig karta!", TextColor.fromCSSHexString("#992020")));
                 return false;
             }
 
-            gameManager.startGame(args[0]);
+            gameManager.startGame(args[1]);
         }else{
             gameManager.endGame();
         }

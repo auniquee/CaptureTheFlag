@@ -8,10 +8,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.BlockDisplay;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.*;
 import org.bukkit.util.Transformation;
 import org.joml.Vector3f;
 
@@ -26,6 +23,7 @@ public class FlagEntity {
     private ArmorStand title;
     private ArmorStand subTitle;
     private BlockDisplay bannerDisplay;
+    private Interaction hitbox;
     private final String banner;
     private Boolean currentlyProtected;
 
@@ -39,6 +37,7 @@ public class FlagEntity {
         this.subTitle = null;
         this.captured = false;
         this.currentlyProtected = false;
+        this.hitbox = null;
     }
 
     public Boolean getCurrentlyProtected() { return currentlyProtected; }
@@ -54,22 +53,27 @@ public class FlagEntity {
     public void spawn(){
         title = (ArmorStand) flagLocation.getWorld().spawnEntity(flagLocation, EntityType.ARMOR_STAND);
         Component customName = Component.text(team.getName().toUpperCase() + "S FLAGGA", team.getColor(), TextDecoration.BOLD);
-        title.customName(customName);
         title.setCustomNameVisible(true);
-        title.setVisible(false);
-        title.setInvulnerable(true);
         title.setGravity(false);
-        flagLocation.add(0, -0.3, 0);
+        title.setVisible(false);
+        title.customName(customName);
+        //title.setBillboard(Display.Billboard.CENTER);
 
+
+        flagLocation.add(0, -0.3, 0);
         subTitle = (ArmorStand) flagLocation.getWorld().spawnEntity(flagLocation, EntityType.ARMOR_STAND);
-        Component sub = Component.text("(högerklicka)", NamedTextColor.GRAY);
-        subTitle.customName(sub);
-        subTitle.setCustomNameVisible(true);
-        subTitle.setVisible(false);
-        subTitle.setInvulnerable(true);
-        subTitle.setGravity(false);
         flagLocation.add(0, 0.3, 0);
 
+        Component sub = Component.text("(högerklicka)", NamedTextColor.GRAY);
+        subTitle.setCustomNameVisible(true);
+        subTitle.setGravity(false);
+        subTitle.setVisible(false);
+        subTitle.customName(customName);
+        subTitle.customName(sub);
+
+        hitbox = (Interaction) flagLocation.getWorld().spawnEntity(flagLocation, EntityType.INTERACTION);
+        hitbox.setInteractionHeight(3);
+        hitbox.setInteractionWidth(2);
 
         flagLocation.setPitch(0);
         Transformation transformation = new Transformation(
@@ -107,17 +111,17 @@ public class FlagEntity {
         return this.captured;
     }
 
-    public Entity getArmorstandEntity(){
+    public Entity getInteractionEntity(){
         if(title == null){
-            System.out.println("ArmorStand hasn't been spawned yet!");
+            System.out.println("Hitbox hasn't been spawned yet!");
             return null;
         }
 
-        return (Entity) title;
+        return (Entity) hitbox;
 
     }
     public List<Entity> getEntities(){
-        return List.of(title, subTitle, bannerDisplay);
+        return List.of(title, subTitle, bannerDisplay, hitbox);
     }
 
 }

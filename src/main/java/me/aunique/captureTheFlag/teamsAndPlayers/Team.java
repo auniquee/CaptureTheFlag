@@ -1,6 +1,7 @@
 package me.aunique.captureTheFlag.teamsAndPlayers;
 
 import me.aunique.captureTheFlag.ctf_modules.FlagEntity;
+import me.aunique.captureTheFlag.ctf_modules.Game;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
 
@@ -48,6 +49,9 @@ public class Team {
     }
     public void incrementFlag(){
         this.capturedFlags += 1;
+        if (this.capturedFlags >= 6){
+            Game.getInstance().gameEnd();
+        }
     }
     public void incrementKills(){
         this.totalKills += 1;

@@ -6,6 +6,7 @@ import me.aunique.captureTheFlag.teamsAndPlayers.Team;
 import me.aunique.captureTheFlag.managers.ConfigManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -55,7 +56,11 @@ public class CaptureFlagListener implements Listener {
             captureFlagEvent.getPlayer().sendMessage(Component.text("Du har redan tagit en flagga!", NamedTextColor.RED));
         }
         // Om spelaren klickar på en flagga för att ta den
-        else if (capturePlayer.getPlayer().getGameMode() != GameMode.SPECTATOR && !stolenTeam.getFlag().getCaptured() && !stolenTeam.getFlag().getCurrentlyProtected()){ // not spectator so that you cant take the flag when died
+        else if (
+                capturePlayer.getPlayer().getGameMode() != GameMode.SPECTATOR && // not spectator so that you cant take the flag when died
+                !stolenTeam.getFlag().getCaptured() &&
+                !stolenTeam.getFlag().getCurrentlyProtected())
+        {
             stolenTeam.getFlag().takeFlag();
             ArrayList<CTFPlayer> players = Game.getInstance().getAllPlayers();
             for(CTFPlayer player : players){
@@ -66,6 +71,11 @@ public class CaptureFlagListener implements Listener {
                             .append(Component.text("Din flagga har blivit stulen av ", NamedTextColor.RED))
                             .append(Component.text(capturePlayer.getPlayer().getName() + "!", capturePlayer.getPlayerTeam().getColor()))
                             .build();
+                    Title title = Title.title(Component.empty(), Component.text()
+                            .append(Component.text(capturePlayer.getPlayer().getName(), capturePlayer.getPlayerTeam().getColor()))
+                            .append(Component.text(" har tagit din flagga!", NamedTextColor.GRAY))
+                            .build());
+                    player.getPlayer().showTitle(title);
                     player.getPlayer().playSound(capturePlayer.getPlayer().getLocation(), Sound.BLOCK_ANVIL_LAND, .3F, .8F);
                     player.getPlayer().sendMessage(message);
                 }

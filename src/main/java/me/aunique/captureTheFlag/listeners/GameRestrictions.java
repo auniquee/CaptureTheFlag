@@ -5,6 +5,8 @@ import io.papermc.paper.datacomponent.item.ItemArmorTrim;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,6 +21,16 @@ public class GameRestrictions implements Listener {
             //Thread.sleep(50);
             inventoryClickEvent.getWhoClicked().setItemOnCursor(null);
 
+        }
+    }
+    @EventHandler
+    public void onHungerDepletion(FoodLevelChangeEvent depletionEvent){
+        depletionEvent.setCancelled(true);
+    }
+    @EventHandler
+    public void onFallDamage(EntityDamageEvent damageEvent){
+        if (damageEvent.getCause() == EntityDamageEvent.DamageCause.FALL){
+            damageEvent.setCancelled(true);
         }
     }
 }
