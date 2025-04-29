@@ -45,7 +45,6 @@ public final class CaptureTheFlag extends JavaPlugin {
     @Override
     public void onDisable() {
         gameManager.endGame();
-        // Plugin shutdown logic
     }
     public static CaptureTheFlag getInstance(){
         return plugin;

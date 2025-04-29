@@ -2,6 +2,7 @@ package me.aunique.captureTheFlag.listeners;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import io.papermc.paper.datacomponent.item.ItemArmorTrim;
+import me.aunique.captureTheFlag.ctf_modules.Game;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 public class GameRestrictions implements Listener {
     @EventHandler
     public void onArmorChange(InventoryClickEvent inventoryClickEvent) throws InterruptedException {
-        if (inventoryClickEvent.getSlotType().equals(InventoryType.SlotType.ARMOR)){
+        if (inventoryClickEvent.getSlotType().equals(InventoryType.SlotType.ARMOR) && Game.getInstance() != null){
             inventoryClickEvent.setCancelled(true);
 
             //Thread.sleep(50);

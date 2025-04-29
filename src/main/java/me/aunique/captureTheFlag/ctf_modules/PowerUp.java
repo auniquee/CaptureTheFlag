@@ -28,8 +28,6 @@ public class PowerUp {
         TEAM_SWORD_UPGRADE, // ger alla i laget bättre svärd
         TEAM_FLAG_PROTECTION, //går ej att ta deras flagga i typ 10 sek
         TEAM_ARMOR_UPGRADE, // alla får bättre armor en kort stund
-
-
     }
 
     private final Location location;

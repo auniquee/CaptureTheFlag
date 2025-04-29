@@ -38,6 +38,7 @@ public class CTFPlayer{
         if (this.holdingFlagTeam != null) { // Om spelaren håller på en flagga så ska den bli captured
 
             this.holdingFlagTeam.getFlag().restoreFlag(); // respawn flag
+            player.setHealth(player.getHealth() + 4);
             playerDie();
             this.playerTeam.incrementFlag();
             this.mynt += 100;

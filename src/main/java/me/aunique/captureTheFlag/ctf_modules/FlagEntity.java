@@ -117,7 +117,7 @@ public class FlagEntity {
             return null;
         }
 
-        return (Entity) hitbox;
+        return hitbox;
 
     }
     public List<Entity> getEntities(){

@@ -147,6 +147,7 @@ public void updateScoreboard() {
         spawnTask = Bukkit.getScheduler().runTaskTimer(CaptureTheFlag.getInstance(), this::updateScoreboard, 20*5, 20); //wait 5 seconds then update once per second
     }
     public void stopAutoRefresh(){
+            spawnTask.cancel();
             spawnTask = null;
     }
     public void scoreboardShutdown(){

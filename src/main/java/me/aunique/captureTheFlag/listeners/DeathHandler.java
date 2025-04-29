@@ -27,7 +27,9 @@ public class DeathHandler implements Listener {
 
         final int countdownTime = 5;
         CTFPlayer killedPlayer = game.getCTFPlayer(playerDeathEvent.getPlayer());
-        game.getCTFPlayer(playerDeathEvent.getEntity().getKiller()).incKills();
+        if(playerDeathEvent.getEntity().getKiller() != null){
+            game.getCTFPlayer(playerDeathEvent.getEntity().getKiller()).incKills();
+        }
         new BukkitRunnable() {
             int timeLeft = countdownTime;
             @Override
